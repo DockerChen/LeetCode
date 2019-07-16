@@ -1,6 +1,6 @@
 public class RemoveDuplicates_80 {
     public static void main(String[] args) {
-        int[] nums = {0, 0, 1, 1, 1, 2, 2, 2,3, 3, 3};
+        int[] nums = {0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3};
 
 
         int len = removeDuplicates(nums);
@@ -10,33 +10,30 @@ public class RemoveDuplicates_80 {
         }
 
 
+
     }
 
     public static int removeDuplicates(int[] nums) {
-        int j = 0;
+        //双指针，index:替换的下标，i：当前位置的下标
+        int index=0;
         int count=0;
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == nums[j]) {
+            if(i==0||nums[i]==nums[i-1]){
                 count++;
-                if(count<=2){
-                    nums[j++]=nums[i];
-                    System.out.println(j+":"+nums[j]);
-
-                }
-
-
-            }else{
-                nums[j++]=nums[i];
+            }else {
                 count=1;
-                System.out.println(j+":"+nums[j]);
-
-
             }
 
+            if(count<=2){
+                nums[index++]=nums[i];
+            }
 
         }
+        return index;
 
-        return j;
+
 
     }
 }
+
+
