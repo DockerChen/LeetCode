@@ -4,8 +4,10 @@ public class Array_find {
         int target = 9;
         boolean result = Find(target, array);
         System.out.println(result);
+//        TestList.main(new String[]{"123","abc"});
 
     }
+
 
     public static boolean Find(int target, int[][] array) {
         /*逐个遍历*/
@@ -41,6 +43,7 @@ public class Array_find {
             }
 
         }
+
         return false;
 
     }

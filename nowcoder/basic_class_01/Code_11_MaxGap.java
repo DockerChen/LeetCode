@@ -1,5 +1,7 @@
 package basic_class_01;
 
+import sun.security.util.Length;
+
 import java.util.Arrays;
 
 public class Code_11_MaxGap {
@@ -37,6 +39,11 @@ public class Code_11_MaxGap {
 				lastMax = maxs[i];
 			}
 		}
+		for (int j = 0; j <=len; j++) {
+			System.out.println(j+"---"+mins[j]+"---"+maxs[j]);
+
+		}
+
 		return res;
 	}
 
@@ -84,14 +91,18 @@ public class Code_11_MaxGap {
 		int maxSize = 100;
 		int maxValue = 100;
 		boolean succeed = true;
-		for (int i = 0; i < testTime; i++) {
-			int[] arr1 = generateRandomArray(maxSize, maxValue);
-			int[] arr2 = copyArray(arr1);
-			if (maxGap(arr1) != comparator(arr2)) {
-				succeed = false;
-				break;
-			}
-		}
+//		for (int i = 0; i < testTime; i++) {
+//			int[] arr1 = generateRandomArray(maxSize, maxValue);
+//			int[] arr2 = copyArray(arr1);
+//			if (maxGap(arr1) != comparator(arr2)) {
+//				succeed = false;
+//				break;
+//			}
+//		}
+
+		int[] arr1={2,10,25,45,60};
+		System.out.println(maxGap(arr1));
+
 		System.out.println(succeed ? "Nice!" : "Fucking fucked!");
 	}
 
