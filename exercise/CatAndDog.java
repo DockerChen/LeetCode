@@ -1,10 +1,10 @@
-package class_03;
+import class_03.Code_04_DogCatQueue;
+import sun.util.locale.provider.FallbackLocaleProviderAdapter;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Code_04_DogCatQueue {
-
+public class CatAndDog {
     public static class Pet {
         private String type;
 
@@ -39,86 +39,96 @@ public class Code_04_DogCatQueue {
         }
 
         public Pet getPet() {
-            return this.pet;
+            return pet;
         }
 
         public long getCount() {
-            return this.count;
+            return count;
         }
 
-        public String getEnterPetType() {
+        public String getPetType() {
             return this.pet.getPetType();
         }
+
     }
 
-    public static class DogCatQueue {
-        private Queue<PetEnterQueue> dogQ;
-        private Queue<PetEnterQueue> catQ;
+    public static class CatandDogQueue {
+        private Queue<PetEnterQueue> catQueue;
+        private Queue<PetEnterQueue> dogQueue;
         private long count;
 
-        public DogCatQueue() {
-            this.dogQ = new LinkedList<PetEnterQueue>();
-            this.catQ = new LinkedList<PetEnterQueue>();
+        public CatandDogQueue() {
+            this.catQueue = new LinkedList<>();
+            this.dogQueue = new LinkedList<>();
             this.count = 0;
         }
 
         public void add(Pet pet) {
-            if (pet.getPetType().equals("dog")) {
-                this.dogQ.add(new PetEnterQueue(pet, this.count++));
-            } else if (pet.getPetType().equals("cat")) {
-                this.catQ.add(new PetEnterQueue(pet, this.count++));
+            if (pet.getPetType().equals("cat")) {
+                catQueue.add(new PetEnterQueue(pet, this.count++));
+            } else if (pet.getPetType().equals("dog")) {
+                dogQueue.add(new PetEnterQueue(pet, count++));
             } else {
-                throw new RuntimeException("err, not dog or cat");
+                throw new RuntimeException(pet.getPetType() + "is not exist");
             }
         }
 
         public Pet pollAll() {
-            if (!this.dogQ.isEmpty() && !this.catQ.isEmpty()) {
-                if (this.dogQ.peek().getCount() < this.catQ.peek().getCount()) {
-                    return this.dogQ.poll().getPet();
+            if (!catQueue.isEmpty() && !dogQueue.isEmpty()) {
+                if (catQueue.peek().getCount() < dogQueue.peek().getCount()) {
+                    return catQueue.poll().getPet();
                 } else {
-                    return this.catQ.poll().getPet();
+                    return dogQueue.poll().getPet();
                 }
-            } else if (!this.dogQ.isEmpty()) {
-                return this.dogQ.poll().getPet();
-            } else if (!this.catQ.isEmpty()) {
-                return this.catQ.poll().getPet();
+            } else if (!catQueue.isEmpty()) {
+                return catQueue.poll().getPet();
+            } else if (!dogQueue.isEmpty()) {
+                return dogQueue.poll().getPet();
             } else {
-                throw new RuntimeException("err, queue is empty!");
+                throw new RuntimeException("queue is empty");
             }
+
         }
 
-        public Dog pollDog() {
-            if (!this.isDogQueueEmpty()) {
-                return (Dog) this.dogQ.poll().getPet();
+        public Pet pollDog() {
+            if (!dogQueue.isEmpty()) {
+                return dogQueue.poll().getPet();
             } else {
-                throw new RuntimeException("Dog queue is empty!");
+                throw new RuntimeException("dog queue is empty");
             }
+
+
         }
 
-        public Cat pollCat() {
-            if (!this.isCatQueueEmpty()) {
-                return (Cat) this.catQ.poll().getPet();
-            } else
-                throw new RuntimeException("Cat queue is empty!");
+        public Pet pollCat() {
+            if (!catQueue.isEmpty()) {
+                return catQueue.poll().getPet();
+            } else {
+                throw new RuntimeException("cat queue is empty");
+            }
+
         }
 
         public boolean isEmpty() {
-            return this.dogQ.isEmpty() && this.catQ.isEmpty();
+            return catQueue.isEmpty() && dogQueue.isEmpty();
+
+
         }
 
-        public boolean isDogQueueEmpty() {
-            return this.dogQ.isEmpty();
+        public boolean isCatEmpty() {
+            return catQueue.isEmpty();
+
+
         }
 
-        public boolean isCatQueueEmpty() {
-            return this.catQ.isEmpty();
+        public boolean isDogEmpty() {
+            return dogQueue.isEmpty();
         }
 
     }
 
     public static void main(String[] args) {
-        DogCatQueue test = new DogCatQueue();
+        CatandDogQueue test = new CatandDogQueue();
 
         Pet dog1 = new Dog();
         Pet cat1 = new Cat();
@@ -147,12 +157,13 @@ public class Code_04_DogCatQueue {
         test.add(cat2);
         test.add(dog3);
         test.add(cat3);
-        while (!test.isDogQueueEmpty()) {
+        while (!test.isDogEmpty()) {
             System.out.println(test.pollDog().getPetType());
         }
         while (!test.isEmpty()) {
             System.out.println(test.pollAll().getPetType());
         }
     }
+
 
 }

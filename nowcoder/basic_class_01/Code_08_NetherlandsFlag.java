@@ -26,12 +26,15 @@ public class Code_08_NetherlandsFlag {
 
 	// for test
 	public static int[] generateArray() {
+
 		int[] arr = new int[10];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = (int) (Math.random() * 3);
 		}
 		return arr;
 	}
+
+
 
 	// for test
 	public static void printArray(int[] arr) {
