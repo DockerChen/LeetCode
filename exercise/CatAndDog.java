@@ -1,6 +1,3 @@
-import class_03.Code_04_DogCatQueue;
-import sun.util.locale.provider.FallbackLocaleProviderAdapter;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,11 +26,11 @@ public class CatAndDog {
         }
     }
 
-    public static class PetEnterQueue {
+    public static class PetEnter {
         private Pet pet;
         private long count;
 
-        public PetEnterQueue(Pet pet, long count) {
+        public PetEnter(Pet pet, long count) {
             this.pet = pet;
             this.count = count;
         }
@@ -53,8 +50,8 @@ public class CatAndDog {
     }
 
     public static class CatandDogQueue {
-        private Queue<PetEnterQueue> catQueue;
-        private Queue<PetEnterQueue> dogQueue;
+        private Queue<PetEnter> catQueue;
+        private Queue<PetEnter> dogQueue;
         private long count;
 
         public CatandDogQueue() {
@@ -62,17 +59,17 @@ public class CatAndDog {
             this.dogQueue = new LinkedList<>();
             this.count = 0;
         }
-
+//往队列中添加pet
         public void add(Pet pet) {
             if (pet.getPetType().equals("cat")) {
-                catQueue.add(new PetEnterQueue(pet, this.count++));
+                catQueue.add(new PetEnter(pet, this.count++));
             } else if (pet.getPetType().equals("dog")) {
-                dogQueue.add(new PetEnterQueue(pet, count++));
+                dogQueue.add(new PetEnter(pet, count++));
             } else {
                 throw new RuntimeException(pet.getPetType() + "is not exist");
             }
         }
-
+//将队列中所有的实例按照进队列的先后顺序依次弹出
         public Pet pollAll() {
             if (!catQueue.isEmpty() && !dogQueue.isEmpty()) {
                 if (catQueue.peek().getCount() < dogQueue.peek().getCount()) {
@@ -89,7 +86,7 @@ public class CatAndDog {
             }
 
         }
-
+//        将队列中dog类的实例按照进队列的先后顺序依次弹出
         public Pet pollDog() {
             if (!dogQueue.isEmpty()) {
                 return dogQueue.poll().getPet();
@@ -99,7 +96,7 @@ public class CatAndDog {
 
 
         }
-
+//        将队列中cat类的实例按照进队列的先后顺序依次弹出
         public Pet pollCat() {
             if (!catQueue.isEmpty()) {
                 return catQueue.poll().getPet();
