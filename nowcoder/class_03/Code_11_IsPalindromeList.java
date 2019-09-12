@@ -57,7 +57,7 @@ public class Code_11_IsPalindromeList {
 
 	// need O(1) extra space
 	public static boolean isPalindrome3(Node head) {
-		if (head == null || head.next == null) {
+  		if (head == null || head.next == null) {
 			return true;
 		}
 		Node n1 = head;

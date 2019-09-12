@@ -49,6 +49,7 @@ public class Code_01_PreInPosTraversal {
 			while (!stack.isEmpty()) {
 				head = stack.pop();
 				System.out.print(head.value + " ");
+				//右孩子先压栈
 				if (head.right != null) {
 					stack.push(head.right);
 				}
@@ -77,7 +78,7 @@ public class Code_01_PreInPosTraversal {
 		}
 		System.out.println();
 	}
-
+	//使用两个栈，中右左 -> 左右中
 	public static void posOrderUnRecur1(Node head) {
 		System.out.print("pos-order: ");
 		if (head != null) {
@@ -100,7 +101,7 @@ public class Code_01_PreInPosTraversal {
 		}
 		System.out.println();
 	}
-
+	//使用一个栈
 	public static void posOrderUnRecur2(Node h) {
 		System.out.print("pos-order: ");
 		if (h != null) {
