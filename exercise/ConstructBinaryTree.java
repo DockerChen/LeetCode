@@ -31,7 +31,7 @@ public class ConstructBinaryTree {
     //pre->12453  in->42513   post->45231
 
     public static void main(String[] args) {
-
+        //test
         int[] preOrder = {1, 2, 4, 5, 3};
         int[] inOrder = {4, 2, 5, 1, 3};
         Node head = constructBinaryTree(preOrder, inOrder, 0, 0, preOrder.length);
