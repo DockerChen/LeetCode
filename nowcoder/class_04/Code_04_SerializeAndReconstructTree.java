@@ -14,7 +14,7 @@ public class Code_04_SerializeAndReconstructTree {
 			this.value = data;
 		}
 	}
-
+    //先序遍历
 	public static String serialByPre(Node head) {
 		if (head == null) {
 			return "#!";
@@ -44,7 +44,7 @@ public class Code_04_SerializeAndReconstructTree {
 		head.right = reconPreOrder(queue);
 		return head;
 	}
-
+    //按层遍历
 	public static String serialByLevel(Node head) {
 		if (head == null) {
 			return "#!";

@@ -1,3 +1,4 @@
+import java.awt.dnd.DragSourceAdapter;
 import java.util.Arrays;
 
 public class MaxGap {
@@ -28,6 +29,9 @@ public class MaxGap {
         int min = Integer.MAX_VALUE;
 
 //        遍历得到数组的最大和最小值
+
+
+
         for (int i = 0; i < arr.length; i++) {
             max = arr[i] > max ? arr[i] : max;
             min = arr[i] < min ? arr[i] : min;

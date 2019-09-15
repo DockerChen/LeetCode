@@ -1,16 +1,7 @@
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.util.Stack;
 
 public class PreInPosTraverseTree {
-    public static class Node {
-        int value;
-        Node left;
-        Node right;
 
-        public Node(int data) {
-            this.value = data;
-        }
-    }
 
     public void preRecursionTraver(Node head) {
         if (head == null) {
