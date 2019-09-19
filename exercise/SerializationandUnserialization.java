@@ -4,15 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SerializationandUnserialization {
-    public static class Node {
-        public int value;
-        public Node left;
-        public Node right;
-
-        public Node(int value) {
-            this.value = value;
-        }
-    }
 
     //按先序遍历
     public static String serializationByPreOrder(Node head) {

@@ -3,7 +3,7 @@ public class ArrayFindNumber {
     public static boolean arrayFindNumber(int[][] arr, int num) {
         int arrRow = arr.length - 1;
         int arrColumn = arr[0].length - 1;
-//        从右上方开始查找
+        //从右上方开始查找
         int sRow = 0;
         int sColumn = arrColumn;
         while (sRow <= arrRow && sColumn >= 0) {

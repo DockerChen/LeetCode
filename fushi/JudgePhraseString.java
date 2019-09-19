@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class JudgeNum {
+public class JudgePhraseString {
     public static boolean judgeNum(int num) {
         String str = String.valueOf(num);
         for (int i = 0; i < str.length(); i++) {
