@@ -3,7 +3,7 @@ package class_05;
 import java.util.HashMap;
 
 public class Code_02_RandomPool {
-
+	//泛型K，可以表示任意一种类型
 	public static class Pool<K> {
 		private HashMap<K, Integer> keyIndexMap;
 		private HashMap<Integer, K> indexKeyMap;

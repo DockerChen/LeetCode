@@ -10,8 +10,9 @@ public class Code_04_UnionFind {
 	}
 
 	public static class UnionFindSet {
-		public HashMap<Node, Node> fatherMap;
-		public HashMap<Node, Integer> sizeMap;
+		public HashMap<Node, Node> fatherMap;	//key : child , value : father
+		public HashMap<Node, Integer> sizeMap;	//node所在的集合有几个节点
+
 
 		public UnionFindSet() {
 			fatherMap = new HashMap<Node, Node>();
@@ -27,6 +28,7 @@ public class Code_04_UnionFind {
 			}
 		}
 
+
 		private Node findHead(Node node) {
 			Node father = fatherMap.get(node);
 			if (father != node) {
@@ -35,6 +37,8 @@ public class Code_04_UnionFind {
 			fatherMap.put(node, father);
 			return father;
 		}
+
+
 		
 		public boolean isSameSet(Node a, Node b) {
 			return findHead(a) == findHead(b);
