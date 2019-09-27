@@ -3,7 +3,9 @@ package class_07;
 public class Code_01_TrieTree {
 
     public static class TrieNode {
+        //前缀的个数
         public int path;
+        //以该字母结尾的字符串个数
         public int end;
         public TrieNode[] nexts;
 
@@ -25,6 +27,7 @@ public class Code_01_TrieTree {
             if (word == null) {
                 return;
             }
+            //string转字符数组
             char[] chs = word.toCharArray();
             TrieNode node = root;
             int index = 0;
@@ -46,6 +49,7 @@ public class Code_01_TrieTree {
                 int index = 0;
                 for (int i = 0; i < chs.length; i++) {
                     index = chs[i] - 'a';
+                    //当path=0时，不需要判断后面的节点，直接跳过
                     if (--node.nexts[index].path == 0) {
                         node.nexts[index] = null;
                         return;
