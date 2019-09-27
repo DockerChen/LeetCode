@@ -51,6 +51,7 @@ public class Code_04_MadianQuick {
 			if (((maxHeapSize + minHeapSize) & 1) == 0) {
 				return (maxHeapHead + minHeapHead) / 2;
 			}
+
 			return maxHeapSize > minHeapSize ? maxHeapHead : minHeapHead;
 		}
 

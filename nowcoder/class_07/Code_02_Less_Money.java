@@ -20,6 +20,7 @@ public class Code_02_Less_Money {
 		return sum;
 	}
 
+	//小根堆
 	public static class MinheapComparator implements Comparator<Integer> {
 
 		@Override
@@ -29,6 +30,7 @@ public class Code_02_Less_Money {
 
 	}
 
+	//大根堆
 	public static class MaxheapComparator implements Comparator<Integer> {
 
 		@Override
@@ -45,7 +47,7 @@ public class Code_02_Less_Money {
 
 		int[] arrForHeap = { 3, 5, 2, 7, 0, 1, 6, 4 };
 
-		// min heap
+		// min heap，PriorityQueue通过二叉小顶堆实现，PriorityQueue（优先队列）的作用是能保证每次取出的元素都是队列中权值最小的
 		PriorityQueue<Integer> minQ1 = new PriorityQueue<>();
 		for (int i = 0; i < arrForHeap.length; i++) {
 			minQ1.add(arrForHeap[i]);

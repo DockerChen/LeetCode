@@ -38,7 +38,9 @@ public class Code_03_IPO {
 			nodes[i] = new Node(Profits[i], Capital[i]);
 		}
 
+		//小根堆
 		PriorityQueue<Node> minCostQ = new PriorityQueue<>(new MinCostComparator());
+		//大根堆
 		PriorityQueue<Node> maxProfitQ = new PriorityQueue<>(new MaxProfitComparator());
 		for (int i = 0; i < nodes.length; i++) {
 			minCostQ.add(nodes[i]);
@@ -47,6 +49,7 @@ public class Code_03_IPO {
 			while (!minCostQ.isEmpty() && minCostQ.peek().c <= W) {
 				maxProfitQ.add(minCostQ.poll());
 			}
+			//不满足项目花费条件时，直接返回
 			if (maxProfitQ.isEmpty()) {
 				return W;
 			}
