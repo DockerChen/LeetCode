@@ -8,7 +8,7 @@ public class Code_09_Knapsack {
 
 	public static int process1(int[] weights, int[] values, int i, int alreadyweight, int bag) {
 		if (alreadyweight > bag) {
-			return 0;
+			return Integer.MIN_VALUE;
 		}
 		if (i == weights.length) {
 			return 0;

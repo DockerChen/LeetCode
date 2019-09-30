@@ -19,7 +19,7 @@ public class FaceBook {
 		if (chs[i] == '2') {
 			int res = number(chs, i + 1);
 			if (i + 1 < chs.length 
-					&& (chs[i + 1]  >= '0' && chs[i + 1]  <= '6')) {
+					&& (chs[i + 1]  >= '0' && chs[i + 1  ]  <= '6')) {
 				res += number(chs, i + 2);
 			}
 			return res;
