@@ -13,9 +13,9 @@ public class Code_02_DFS {
 		HashSet<Node> set = new HashSet<>();
 		stack.add(node);
 		set.add(node);
-		System.out.println(node.value);
 		while (!stack.isEmpty()) {
 			Node cur = stack.pop();
+			System.out.println(node.value);
 			for (Node next : cur.nexts) {
 				if (!set.contains(next)) {
 					stack.push(cur);

@@ -1,3 +1,5 @@
+package Test;
+
 public class TestException {
 
     static void proc() {

@@ -10,7 +10,7 @@ import java.util.Set;
 //undirected graph only
 public class Code_04_Kruskal {
 
-	// Union-Find Set
+	// Union-Find Set 并查集
 	public static class UnionFind {
 		private HashMap<Node, Node> fatherMap;
 		private HashMap<Node, Integer> rankMap;
@@ -81,6 +81,7 @@ public class Code_04_Kruskal {
 		Set<Edge> result = new HashSet<>();
 		while (!priorityQueue.isEmpty()) {
 			Edge edge = priorityQueue.poll();
+			//判断两个顶点是否属于同一棵树
 			if (!unionFind.isSameSet(edge.from, edge.to)) {
 				result.add(edge);
 				unionFind.union(edge.from, edge.to);
