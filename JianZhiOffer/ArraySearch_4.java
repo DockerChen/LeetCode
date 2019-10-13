@@ -1,26 +1,15 @@
-public class Array_find {
+public class ArraySearch_4 {
     public static void main(String[] args) {
         int[][] array = {{1, 2, 3}, {4, 5, 6}};
         int target = 9;
         boolean result = Find(target, array);
         System.out.println(result);
-//        TestList.main(new String[]{"123","abc"});
+
 
     }
 
-
     public static boolean Find(int target, int[][] array) {
-        /*逐个遍历*/
-//        for (int i = 0; i < array.length; i++) {
-//            for (int j = 0; j <array[i].length ; j++) {
-//                if(target==array[i][j]){
-//                    return true;
-//                }
-//
-//            }
-//
-//        }
-//        return false;
+
         /*左下查找*/
         int rows = array.length;
         if (rows == 0) {
@@ -43,8 +32,6 @@ public class Array_find {
             }
 
         }
-
         return false;
-
     }
 }
