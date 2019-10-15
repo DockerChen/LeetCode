@@ -88,4 +88,14 @@ public class Code_03_StackAndQueueConvert {
 
 	}
 
+	public static void main(String[] args) {
+		TwoStacksQueue twoStacksQueue=new TwoStacksQueue();
+		twoStacksQueue.push(1);
+		twoStacksQueue.push(2);
+		twoStacksQueue.push(3);
+		System.out.println(twoStacksQueue.poll());
+		System.out.println(twoStacksQueue.poll());
+		System.out.println(twoStacksQueue.poll());
+	}
+
 }

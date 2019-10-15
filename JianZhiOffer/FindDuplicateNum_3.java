@@ -1,7 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.DUP;
-
-import java.util.logging.Level;
-
 public class FindDuplicateNum_3 {
     public static boolean findDuplicateNum(int[] arr, int length, int[] dup) {
         if (arr == null || length <= 0) {
