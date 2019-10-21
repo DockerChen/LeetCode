@@ -9,7 +9,7 @@ public class Test extends Base {
     }
 
     public static void main(String[] args) {
-        new Test();
+        new Test13();
     }
 }
 
