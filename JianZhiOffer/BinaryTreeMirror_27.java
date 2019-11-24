@@ -5,7 +5,6 @@ public class BinaryTreeMirror_27 {
         BinaryTreeNode right;
     }
 
-
     public void mirrorRecursive(BinaryTreeNode root) {
         if (root == null) {
             return;
@@ -16,8 +15,12 @@ public class BinaryTreeMirror_27 {
         BinaryTreeNode tmp = root.left;
         root.left = root.right;
         root.right = tmp;
-        mirrorRecursive(root.left);
-        mirrorRecursive(root.right);
+        if (root.left != null) {
+            mirrorRecursive(root.left);
+        }
+        if (root.right != null) {
+            mirrorRecursive(root.right);
+        }
     }
 
 }
