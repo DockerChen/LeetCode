@@ -1,6 +1,6 @@
 public class SubTree_26 {
     static class BinaryTreeNode {
-        int value;
+        double value;
         BinaryTreeNode left;
         BinaryTreeNode right;
 
@@ -8,6 +8,7 @@ public class SubTree_26 {
             this.value = value;
         }
     }
+
     //遍历所有根节点值相同的子树
     public static boolean hasSubTree(BinaryTreeNode binaryTreeNode1, BinaryTreeNode binaryTreeNode2) {
         boolean result = false;
@@ -27,6 +28,7 @@ public class SubTree_26 {
         return result;
 
     }
+
     //判断根节点相同的子树是否完全一样
     public static boolean judge(BinaryTreeNode binaryTreeNode1, BinaryTreeNode binaryTreeNode2) {
         if (binaryTreeNode2 == null) {
@@ -36,12 +38,21 @@ public class SubTree_26 {
             return false;
         }
 
-        if (binaryTreeNode1.value != binaryTreeNode2.value) {
+        if (!Equals(binaryTreeNode1.value, binaryTreeNode2.value)) {
             return false;
         } else {
             return judge(binaryTreeNode1.left, binaryTreeNode2.left) && judge(binaryTreeNode1.right, binaryTreeNode2.right);
         }
 
+    }
+    //计算机表示小数（float、double）存在误差，不能直接用等号判断两个小数是否相等。如果两个小数的差的绝对值很小，
+    // 小于0.0000001，则认为相等
+    public static boolean Equals(double a, double b) {
+        if (Math.abs(a - b) < 0.0000001) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
