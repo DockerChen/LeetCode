@@ -1,4 +1,5 @@
 public class PrintStringSequence {
+    //打印所有的子序列
     public static void printStringSequence(char[] chs,int index,String res) {
         if(index==chs.length){
             System.out.println(res);

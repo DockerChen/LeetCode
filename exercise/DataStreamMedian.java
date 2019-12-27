@@ -23,7 +23,7 @@ public class DataStreamMedian {
 
         }
 
-        public void add(int number) {
+        public void Insert(int number) {
             if (maxHeap.isEmpty()) {
                 maxHeap.add(number);
             } else {
@@ -52,7 +52,7 @@ public class DataStreamMedian {
             }
         }
 
-        public double getMeDian() {
+        public double GetMedian() {
             int minHeapSize = minHeap.size();
             int maxHeapSize = maxHeap.size();
             double median = 0;
@@ -102,9 +102,9 @@ public class DataStreamMedian {
             int[] arr = generateArray();
             Median median = new Median();
             for (int j = 0; j < arr.length; j++) {
-                median.add(arr[j]);
+                median.Insert(arr[j]);
             }
-            if (median.getMeDian() != getMeDianArray(arr)) {
+            if (median.GetMedian() != getMeDianArray(arr)) {
                 flag = false;
                 printArray(arr);
                 break;
