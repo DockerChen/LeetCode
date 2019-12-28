@@ -42,6 +42,8 @@ public class NumSequence_44 {
         }
     }
 
+    //TODO: test
+
     public static void main(String[] args) {
         NumSequence_44 numSequence_44 = new NumSequence_44();
         System.out.println(numSequence_44.getDigitAtIndex(999));
