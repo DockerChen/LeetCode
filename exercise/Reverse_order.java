@@ -1,20 +1,23 @@
+import java.util.Arrays;
+
 public class Reverse_order {
 
-    /*归并排序*/
+
     public static void reverse_order(int[] arr) {
         if (arr == null || arr.length < 2) {
             return;
         }
-        System.out.println("reverse order:"+mergeSort(arr, 0, arr.length - 1));
+        System.out.println("reverse order:" + mergeSort(arr, 0, arr.length - 1));
 
     }
 
+    /*归并排序*/
     public static int mergeSort(int[] arr, int left, int right) {
         if (left == right) {
             return 0;
         }
-        int mid = ((right - left) >> 1) + left;
-        return mergeSort(arr, left, mid) +mergeSort(arr, mid + 1, right) +merge(arr, left, mid, right);
+        int mid = left + ((right - left) >> 1);
+        return mergeSort(arr, left, mid) + mergeSort(arr, mid + 1, right) + merge(arr, left, mid, right);
 
     }
 
@@ -24,7 +27,7 @@ public class Reverse_order {
         int i = 0;
         int p1 = left;
         int p2 = mid + 1;
-        int res=0;
+        int res = 0;
         while (p1 <= mid && p2 <= right) {
             if (arr[p1] > arr[p2]) {
                 for (int j = p2; j <= right; j++) {
@@ -36,6 +39,7 @@ public class Reverse_order {
 
         }
 
+        /*下面两个循环只有一个会执行*/
         while (p1 <= mid) {
             help[i++] = arr[p1++];
         }
@@ -56,7 +60,6 @@ public class Reverse_order {
 
     /*对数器*/
     /*绝对正确的方法*/
-
 
     public static int[] generateRandomArray(int maxSize, int maxValue) {
         int[] arr = new int[(int) ((maxSize + 1) * Math.random())];
@@ -97,8 +100,8 @@ public class Reverse_order {
         int maxSize = 100;
         int maxValue = 100;
         boolean succeed = true;
-        int[] arr=generateRandomArray(maxSize,maxValue);
-//        int[] arr = {5, 4, 3, 2, 1};
+//        int[] arr=generateRandomArray(maxSize,maxValue);
+        int[] arr = {7, 5, 6, 4};
         printArray(arr);
         reverse_order(arr);
         printArray(arr);
