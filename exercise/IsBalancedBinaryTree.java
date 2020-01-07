@@ -15,7 +15,7 @@ public class IsBalancedBinaryTree {
 
     }
 
-    boolean isBalancedTree(Node head) {
+    public boolean isBalancedTree(Node head) {
         return getHeight(head) != -1;
 
     }

@@ -1,4 +1,4 @@
-public class BinaryDepth_55 {
+public class BinaryDepth_55_1 {
     public class TreeNode {
         int val = 0;
         TreeNode left = null;

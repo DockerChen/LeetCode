@@ -1,6 +1,7 @@
 import java.util.Stack;
 
 public class IsSearchTree {
+    //在递归中序遍历代码的基础上进行修改
     public static boolean isSearchTree(Node head) {
         String str = "" + inOrderTraver(head, new StringBuilder(""));
 
@@ -34,6 +35,8 @@ public class IsSearchTree {
         return str;
     }
 
+
+    //在非递归中序遍历代码的基础上进行修改
     public boolean isSearchTreeImprove(Node head) {
         if (head == null) {
             return false;
@@ -82,6 +85,7 @@ public class IsSearchTree {
         head.right.right.right = new Node(11);
 
         System.out.println(isSearchTree(head) ? "true" : "false");
+//        System.out.println(Integer.toBinaryString(-5));
 
 //        PreInPosTraverseTree preInPosTraverseTree=new PreInPosTraverseTree();
 //        preInPosTraverseTree.inRecursionTraver(head);
