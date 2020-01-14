@@ -20,10 +20,10 @@ public class LearnThread {
         Thread helloThread=new HelloThread();
         helloThread.start();
         helloThread.run();
-        helloThread.join();
-
-        Thread helloRunnable=new Thread(new HelloRunnable());
-        helloRunnable.start();
+//        helloThread.join();
+//
+//        Thread helloRunnable=new Thread(new HelloRunnable());
+//        helloRunnable.start();
 
 
     }
