@@ -1,6 +1,8 @@
-import java.lang.reflect.Array;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 // Definition for singly-linked list.
 class ListNode {
@@ -620,7 +622,7 @@ public class Solution {
         if (m == 1) {
             return reverseN(head, n);
         }
-        head.next = reverseBetween(head, m - 1, n - 1);
+        head.next = reverseBetween(head.next, m - 1, n - 1);
         return head;
 
     }
@@ -1033,7 +1035,7 @@ public class Solution {
     }
 
     public int maxEnvelopes(int[][] envelopes) {
-        if(envelopes==null||envelopes.length==0){
+        if (envelopes == null || envelopes.length == 0) {
             return 0;
         }
         int n = envelopes.length;
@@ -1043,32 +1045,296 @@ public class Solution {
                 return o1[0] == o2[0] ? o2[1] - o1[1] : o1[0] - o2[0];
             }
         });
-        int[] height=new int[n];
+        int[] height = new int[n];
         for (int i = 0; i < n; i++) {
-            height[i]=envelopes[i][1];
+            height[i] = envelopes[i][1];
         }
         return lengthOfLIS(height);
 
-
     }
+
     //最长递增子序列（LIS），动态规划
     private int lengthOfLIS(int[] height) {
-        int[] dp=new int[height.length];
-        Arrays.fill(dp,1);
+        int[] dp = new int[height.length];
+        Arrays.fill(dp, 1);
         for (int i = 0; i < height.length; i++) {
             for (int j = 0; j < i; j++) {
-                if(height[j]<height[i]){
-                    dp[i]=Math.max(dp[i],dp[j]+1);
+                if (height[j] < height[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
         }
-        int max=dp[0];
+        int max = dp[0];
         for (int i = 0; i < dp.length; i++) {
-            max=Math.max(max,dp[i]);
+            max = Math.max(max, dp[i]);
         }
         return max;
+    }
 
+    public void shuffle(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            int rand = randInt(i, n - 1);
+            swap(arr, arr[i], arr[rand]);
+        }
+    }
 
+    private void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
+    private int randInt(int min, int max) {
+        Random random = new Random();
+        int res = random.nextInt(max) % (max - min + 1) + min;
+        return res;
+    }
+
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int rootCount = count(root, sum);
+        int leftCount = pathSum(root.left, sum);
+        int rightCount = pathSum(root.right, sum);
+        return rootCount + leftCount + rightCount;
+
+    }
+
+    private int count(TreeNode node, int sum) {
+        if (node == null) {
+            return 0;
+        }
+        int isMe = (node.val == sum) ? 1 : 0;
+        int left = count(node.left, sum - node.val);
+        int right = count(node.right, sum - node.val);
+        return isMe + left + right;
+    }
+
+    public void mergeSort(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return;
+        }
+        mergeSort(arr, 0, arr.length - 1);
+    }
+
+    public void mergeSort(int[] arr, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = (right - left) >> 1 + left;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+
+    }
+
+    private void merge(int[] arr, int left, int mid, int right) {
+        int[] help = new int[right - left + 1];
+        int i = 0;
+        int p1 = left;
+        int p2 = right;
+        while (p1 <= left && p2 <= right) {
+            help[i++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
+        }
+        while (p1 <= left) {
+            help[i++] = arr[p1++];
+        }
+        while (p2 <= right) {
+            help[i++] = arr[p2++];
+        }
+        for (int j = 0; j < help.length; j++) {
+            arr[left + j] = help[j];
+        }
+
+    }
+
+    public int countPrimes(int n) {
+        boolean[] isPrime = new boolean[n];
+        Arrays.fill(isPrime, true);
+
+        for (int i = 2; i < n; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j < n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int count = 0;
+        for (int i = 2; i < n; i++) {
+            if (isPrime[i]) {
+                count++;
+            }
+        }
+        return count;
+
+    }
+
+    public boolean isLeapYear(int year) {
+
+        if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    public class SpinLock {
+        private AtomicReference<Thread> cas = new AtomicReference<Thread>();
+
+        public void lock() {
+            Thread current = Thread.currentThread();
+            // 利用CAS
+            while (!cas.compareAndSet(null, current)) {
+                // DO nothing
+            }
+        }
+
+        public void unlock() {
+            Thread current = Thread.currentThread();
+            cas.compareAndSet(current, null);
+        }
+    }
+
+    //接雨水
+    public int trap(int[] height) {
+        int sum = 0;
+
+        for (int i = 0; i < height.length; i++) {
+            int left_max = 0;
+            int right_max = 0;
+            for (int j = 0; j <= i; j++) {
+                left_max = Math.max(left_max, height[j]);
+            }
+
+            for (int j = i; j < height.length; j++) {
+                right_max = Math.max(right_max, height[j]);
+            }
+
+            sum += Math.min(left_max, right_max) - height[i];
+
+        }
+        return sum;
+
+    }
+
+    public int trapByTwoPointer(int[] height) {
+        if (height == null || height.length == 0) {
+            return 0;
+        }
+        int sum = 0;
+        int left_max = height[0];
+        int right_max = height[height.length - 1];
+        int left = 0;
+        int right = height.length - 1;
+        while (left <= right) {
+            left_max = Math.max(left_max, height[left]);
+            right_max = Math.max(right_max, height[right]);
+            if (left_max < right_max) {
+                sum += left_max - height[left];
+                left++;
+            } else {
+                sum += right_max - height[right];
+                right--;
+            }
+        }
+
+        return sum;
+
+    }
+
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        int slow = 0;
+        int fast = 1;
+        while (fast < nums.length) {
+            if (nums[slow] != nums[fast]) {
+                slow++;
+                nums[slow] = nums[fast];
+            }
+            fast++;
+        }
+        return slow + 1;
+
+    }
+
+    public ListNode removeLinkedListDuplicates(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (fast != null) {
+            if (slow.val != fast.val) {
+                slow.next = fast;
+                slow = slow.next;
+            }
+            fast = fast.next;
+        }
+        slow.next = null;
+        return head;
+
+    }
+
+    public String longestPalindrome_3(String s) {
+        String res = "";
+        for (int i = 0; i < s.length(); i++) {
+            String s1 = getPalindrome(s, i, i);
+            String s2 = getPalindrome(s, i, i + 1);
+            res = res.length() > s1.length() ? res : s1;
+            res = res.length() > s2.length() ? res : s2;
+        }
+        return res;
+
+    }
+
+    private String getPalindrome(String s, int i, int j) {
+        while (i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)) {
+            i--;
+            j++;
+        }
+        return s.substring(i + 1, j);
+    }
+
+    public ListNode reverse_1(ListNode head) {
+        ListNode pre = null, cur = head, nxt = null;
+        while (cur != null) {
+            nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
+
+    public ListNode reverse(ListNode head, ListNode b) {
+        ListNode pre = null, cur = head, nxt = null;
+        while (cur != b) {
+            nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) {
+            return null;
+        }
+        ListNode a, b;
+        a = b = head;
+        for (int i = 1; i <= k; i++) {
+            if (b == null) {
+                return head;
+            }
+            b = b.next;
+        }
+        ListNode newHead = reverse(a, b);
+        a.next = reverseKGroup(b, k);
+        return newHead;
     }
 
     public static void main(String[] args) {
@@ -1100,6 +1366,18 @@ public class Solution {
         System.out.println(solution.subarraySum(arr, 8));
         System.out.println(solution.findContinuousSequence(9));
         System.out.println(solution.multiply("123", "45"));
+
+        String s1 = new String("abc");// 堆内存的地址值
+        String s2 = "abc";
+        System.out.println(s1 == s2);// 输出 false,因为一个是堆内存，一个是常量池的内存，故两者是不同的。
+        System.out.println(s1.equals(s2));// 输出 true
+        for (int i = 2000; i <= 3000; i++) {
+            if (solution.isLeapYear(i)) {
+                System.out.print(i + " ");
+
+            }
+
+        }
 
     }
 
