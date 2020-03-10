@@ -12,7 +12,7 @@ public class NetherlandsFlag {
                 cur++;
             }
         }
-        return new int[]{less , more };
+        return new int[]{less, more};
     }
 
     public static void swap(int[] arr, int i, int j) {
@@ -35,24 +35,17 @@ public class NetherlandsFlag {
 
         }
         System.out.println();
-        
 
     }
-
 
     public static void main(String[] args) {
-        while (true) {
-            int[] arr = generateArray();
-//            printArray(arr);
-            int num = arr[5];
-
-            int[] res = netherlandsflag(arr, 0, arr.length - 1, 5);
-            if (res[0] > res[1]) {
-                printArray(arr);
-                System.out.println(5 + "--" + res[0] + "," + res[1]);
-                break;
-            }
-        }
+        int[] arr = generateArray();
+        printArray(arr);
+        int[] res = netherlandsflag(arr, 0, arr.length - 1, arr[0]);
+        System.out.println(res[0]+" "+res[1]);
+        printArray(arr);
 
     }
+
+
 }

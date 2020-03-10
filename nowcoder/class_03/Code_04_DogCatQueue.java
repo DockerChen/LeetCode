@@ -120,6 +120,7 @@ public class Code_04_DogCatQueue {
     public static void main(String[] args) {
         DogCatQueue test = new DogCatQueue();
 
+
         Pet dog1 = new Dog();
         Pet cat1 = new Cat();
         Pet dog2 = new Dog();

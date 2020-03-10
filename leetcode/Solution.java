@@ -1,7 +1,6 @@
-import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // Definition for singly-linked list.
@@ -81,6 +80,30 @@ public class Solution {
 
         return maxLength;
 
+    }
+
+    public int lengthOfLongestSubstring_1(String s) {
+        if (s.length() == 0 || s == null) {
+            return 0;
+        }
+        char[] chars = s.toCharArray();
+        Map<Character, Integer> windows = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        int res = 0;
+        //每次移动right，增大滑动窗口时更新res
+        for (int i = 0; i < chars.length; i++) {
+            windows.put(chars[i], windows.getOrDefault(chars[i], 0) + 1);
+            right++;
+            while (windows.get(chars[i]) > 1) {
+                char c = chars[left];
+                windows.put(c, windows.get(c) - 1);
+                left++;
+            }
+            res = Math.max(res, right - left);
+
+        }
+        return res;
     }
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -195,26 +218,25 @@ public class Solution {
             return s;
         }
 
-        int start = 0, end = 0;
+        String res = "";
         for (int i = 0; i < s.length(); i++) {
-            int len1 = expandCenter(s, i, i);
-            int len2 = expandCenter(s, i, i + 1);
-            int len = Math.max(len1, len2);
-            if (len > end - start) {
-                start = i - (len - 1) / 2;
-                end = i + len / 2;
-            }
+            String s1 = expandCenter(s, i, i);
+            String s2 = expandCenter(s, i, i + 1);
+            res = s1.length() > res.length() ? s1 : res;
+            res = s2.length() > res.length() ? s2 : res;
+
         }
-        return s.substring(start, end + 1);
+
+        return res;
 
     }
 
-    private int expandCenter(String s, int left, int right) {
+    public String expandCenter(String s, int left, int right) {
         while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
             left--;
             right++;
         }
-        return right - left - 1;
+        return s.substring(left + 1, right);
     }
 
     List<String> list = new ArrayList<>();
@@ -593,40 +615,6 @@ public class Solution {
 
     }
 
-    ListNode reverse(ListNode head) {
-        if (head.next == null) {
-            return head;
-        }
-        ListNode last = reverse(head.next);
-        head.next.next = head;
-        head.next = null;
-        return last;
-
-    }
-
-    ListNode successor = null;//后驱节点
-
-    ListNode reverseN(ListNode head, int n) {
-        if (n == 1) {
-            successor = head.next;
-            return head;
-        }
-        ListNode last = reverseN(head.next, n - 1);
-        head.next.next = head;
-        head.next = successor;
-        return last;
-
-    }
-
-    ListNode reverseBetween(ListNode head, int m, int n) {
-        if (m == 1) {
-            return reverseN(head, n);
-        }
-        head.next = reverseBetween(head.next, m - 1, n - 1);
-        return head;
-
-    }
-
     List<List<Integer>> res = new LinkedList<>();
 
     public List<List<Integer>> permute(int[] nums) {
@@ -649,60 +637,6 @@ public class Solution {
             backtrack(nums, track);
             track.removeLast();
         }
-
-    }
-
-    public String minWindow(String s, String t) {
-        Map<Character, Integer> window = new HashMap<>();
-        Map<Character, Integer> needs = new HashMap<>();
-        char[] source = s.toCharArray();
-        char[] target = t.toCharArray();
-        for (int i = 0; i < target.length; i++) {
-            needs.put(target[i], needs.getOrDefault(target[i], 0) + 1);
-        }
-        System.out.println(needs);
-        int left = 0;
-        int right = 0;
-        //s中匹配t中字符的个数
-        int match = 0;
-        int start = 0;
-        int minLen = Integer.MAX_VALUE;
-        List<String> res = new ArrayList<>();
-        while (right < source.length) {
-            char c = source[right];
-            if (needs.containsKey(c)) {
-                window.put(c, window.getOrDefault(c, 0) + 1);
-                //t中可能会有重复的字符串
-                if (window.get(c) <= needs.get(c)) {
-                    match++;
-                }
-            }
-            right++;
-
-            while (match == target.length) {
-                if (right - left < minLen) {
-                    minLen = right - left;
-                    start = left;
-                }
-
-                if (right - left == target.length) {
-                    res.add(s.substring(left));
-                }
-
-                char c2 = source[left];
-                if (needs.containsKey(c2)) {
-                    window.put(c2, window.get(c2) - 1);
-                    if (window.get(c2) < needs.get(c2)) {
-                        match--;
-                    }
-                }
-                left++;
-
-            }
-
-        }
-        System.out.println(minLen);
-        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
 
     }
 
@@ -1053,24 +987,6 @@ public class Solution {
 
     }
 
-    //最长递增子序列（LIS），动态规划
-    private int lengthOfLIS(int[] height) {
-        int[] dp = new int[height.length];
-        Arrays.fill(dp, 1);
-        for (int i = 0; i < height.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (height[j] < height[i]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                }
-            }
-        }
-        int max = dp[0];
-        for (int i = 0; i < dp.length; i++) {
-            max = Math.max(max, dp[i]);
-        }
-        return max;
-    }
-
     public void shuffle(int[] arr) {
         int n = arr.length;
         for (int i = 0; i < n; i++) {
@@ -1243,7 +1159,7 @@ public class Solution {
 
     }
 
-    public int removeDuplicates(int[] nums) {
+    public int removeDuplicates_1(int[] nums) {
         if (nums.length == 0) {
             return 0;
         }
@@ -1337,6 +1253,617 @@ public class Solution {
         return newHead;
     }
 
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int res = 0;
+        res ^= n;
+        for (int i = 0; i < n; i++) {
+            res ^= i ^ nums[i];
+        }
+        return res;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] < 0)
+                    continue;
+                dp[i] = Math.min(dp[i - coins[j]] + 1, dp[i]);
+            }
+        }
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+
+    }
+
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int coin : coins) {
+            for (int x = coin; x < amount + 1; ++x) {
+                dp[x] += dp[x - coin];
+            }
+        }
+        return dp[amount];
+
+    }
+
+    //最长公共子序列
+    public int longestCommonSubsequence(String text1, String text2) {
+        char[] chars1 = text1.toCharArray();
+        char[] chars2 = text2.toCharArray();
+        int len1 = chars1.length;
+        int len2 = chars2.length;
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for (int i = 1; i < len1 + 1; i++) {
+            for (int j = 1; j < len2 + 1; j++) {
+                if (chars1[i - 1] == chars2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[len1][len2];
+    }
+
+    //最长递增子序列（LIS），动态规划
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0 || nums == null) {
+            return 0;
+        }
+        int n = nums.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < dp.length; i++) {
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+
+    }
+
+    //最长递增子序列的个数
+    public int findNumberOfLIS(int[] nums) {
+        if (nums.length == 0 || nums == null) {
+            return 0;
+        }
+        int n = nums.length;
+        //dp[i] 表示以 nums[i] 结尾的最长递增子序列的长度
+        int[] dp = new int[n];
+        //count[i] 表示以 nums[i] 结尾的最长递增子序列的个数
+        int[] count = new int[n];
+        Arrays.fill(dp, 1);
+        Arrays.fill(count, 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+//                    两者之间的关系：对于 i>j, nums[i] > nums[j] 的时候，如果 dp[ j]+1 > dp[i]，
+//                    说明第一次找到 dp[ j]+1 长度且以 nums[ i]结尾的最长递增子序列，
+//                    则 count[ i]=count[j]（以 nums[ i]结尾的最长递增子序列的组合方式就等于 nums[ j]目前的组合方式）;
+//                    如果 dp[ j]+1 == dp[i] 说明这个长度的递增序列已找到过一次了，则 count[ i]+=count[j]
+//                    （现有的组合方式个数加上 count[ j]的组合方式，即为总的组合方式个数）
+
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        count[i] = count[j];
+                    } else if (dp[j] + 1 == dp[i]) {
+                        count[i] += count[j];
+
+                    }
+
+                }
+
+            }
+        }
+        int max = 0;
+        for (int i = 0; i < dp.length; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        int res = 0;
+        for (int i = 0; i < count.length; i++) {
+            res = max == dp[i] ? res + count[i] : res;
+        }
+        return res;
+
+    }
+
+    public int[] twoSum(int[] numbers, int target) {
+        int i = 0;
+        int j = numbers.length - 1;
+        int sum = 0;
+        while (i < j) {
+            sum = numbers[i] + numbers[j];
+            if (sum < target) {
+                i++;
+            } else if (sum > target) {
+                j--;
+            } else {
+                break;
+            }
+        }
+        return new int[]{i + 1, j + 1};
+
+    }
+
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) {
+            return "";
+        }
+        String res = strs[0];
+        for (int i = 0; i < strs.length - 1; i++) {
+            int min = Math.min(res.length(), strs[i + 1].length());
+            String tmp = "";
+            for (int j = 0; j < min; j++) {
+
+                if (res.charAt(j) == strs[i + 1].charAt(j)) {
+                    tmp += strs[i].charAt(j);
+                } else {
+                    break;
+                }
+            }
+            res = tmp;
+            if (res == "") {
+                break;
+            }
+        }
+        return res;
+
+    }
+
+    public String minWindow(String s, String t) {
+        //need存储t中字符的出现次数
+        HashMap<Character, Integer> need = new HashMap();
+        //window存储滑动窗口的中字符的出现次数
+        HashMap<Character, Integer> window = new HashMap();
+        char[] source = s.toCharArray();
+        char[] target = t.toCharArray();
+        for (int i = 0; i < target.length; i++) {
+            need.put(target[i], need.getOrDefault(target[i], 0) + 1);
+        }
+        //left，right表示滑动窗口的范围
+        int left = 0;
+        int right = 0;
+        //滑动窗口匹配t中字符的个数
+        int match = 0;
+        //start表示最小覆盖子串开始的下标值
+        int start = 0;
+        //最小覆盖子串的长度
+        int minLen = Integer.MAX_VALUE;
+
+        while (right < source.length) {
+            char c = source[right];
+            if (need.containsKey(c)) {
+                window.put(c, window.getOrDefault(c, 0) + 1);
+                //t中可能有重复字符
+                if (window.get(c) <= need.get(c)) {
+                    match++;
+                }
+            }
+            right++;
+            while (match == target.length) {
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    start = left;
+                }
+                char c2 = source[left];
+                if (need.containsKey(c2)) {
+                    window.put(c2, window.get(c2) - 1);
+                    if (window.get(c2) < need.get(c2)) {
+                        match--;
+                    }
+                }
+                left++;
+            }
+
+        }
+
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(start, start + minLen);
+
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        int N = nums.length;
+        for (int i = 0; i < N; i++) {
+            if (nums[i] > 0) {
+                return res;
+            }
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
+            }
+
+            int l = i + 1, r = N - 1, target = -nums[i];
+            while (l < r) {
+                int sum = nums[l] + nums[r];
+                if (sum == target) {
+
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    while (l < r && nums[l] == nums[l + 1]) {
+                        l++;
+                    }
+                    while (l < r && nums[r - 1] == nums[r]) {
+                        r--;
+                    }
+                    l++;
+                    r--;
+
+                } else if (sum < target) {
+                    l++;
+                } else {
+                    r--;
+                }
+
+            }
+        }
+        return res;
+
+    }
+
+    //比较简单的逻辑判断，只需注意当前candies的数量是否足够分配给当前的小朋友
+    public int[] distributeCandies(int candies, int num_people) {
+        int[] ans = new int[num_people];
+        int i = 0;
+        int count = 1;
+        while (candies > 0) {
+            if (candies >= count) {
+                ans[i] += count;
+            } else {
+                ans[i] += candies;
+            }
+            candies = candies - count;
+            i++;
+            count++;
+            if (i == num_people) {
+                i = 0;
+            }
+
+        }
+        return ans;
+
+    }
+
+    public int orangesRotting(int[][] grid) {
+        int M = grid.length;
+        int N = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int freshOrange = 0;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (grid[i][j] == 1) {
+                    freshOrange++;
+                } else if (grid[i][j] == 2) {
+                    queue.add(new int[]{i, j});
+                }
+            }
+        }
+
+        int round = 0;
+        while (freshOrange > 0 && !queue.isEmpty()) {
+            round++;
+            int n = queue.size();
+            for (int i = 0; i < n; i++) {
+                int[] orange = queue.poll();
+                int r = orange[0];
+                int c = orange[1];
+                if (r - 1 >= 0 && grid[r - 1][c] == 1) {
+                    grid[r - 1][c] = 2;
+                    freshOrange--;
+                    queue.add(new int[]{r - 1, c});
+                }
+                if (r + 1 < M && grid[r + 1][c] == 1) {
+                    grid[r + 1][c] = 2;
+                    freshOrange--;
+                    queue.add(new int[]{r + 1, c});
+                }
+                if (c - 1 >= 0 && grid[r][c - 1] == 1) {
+                    grid[r][c - 1] = 2;
+                    freshOrange--;
+                    queue.add(new int[]{r, c - 1});
+                }
+                if (c + 1 < N && grid[r][c + 1] == 1) {
+                    grid[r][c + 1] = 2;
+                    freshOrange--;
+                    queue.add(new int[]{r, c + 1});
+                }
+            }
+        }
+        return freshOrange > 0 ? -1 : round;
+    }
+
+    public ListNode reverseListByRecursive(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+        ListNode newHead = reverseListByRecursive(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
+    }
+
+    public ListNode reverseListByIteration(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode cur = null;
+        ListNode nxt;
+        while (head != null) {
+            nxt = head.next;
+            head.next = cur;
+            cur = head;
+            head = nxt;
+        }
+        return cur;
+
+    }
+
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (m == 1) {
+            return reverseN(head, n);
+        }
+        head.next = reverseBetween(head.next, m - 1, n - 1);
+        return head;
+
+    }
+
+    ListNode successor = null;
+
+    public ListNode reverseN(ListNode head, int n) {
+        if (n == 1) {
+            successor = head.next;
+            return head;
+        }
+        ListNode newHead = reverseN(head.next, n - 1);
+        head.next.next = head;
+        head.next = successor;
+        return newHead;
+
+    }
+
+    public int[][] findContinuousSequence_1(int target) {
+        List<int[]> res = new ArrayList<>();
+        int i = 1;
+        int j = 1;
+        int sum = 0;
+        while (i <= target / 2) {
+            if (sum < target) {
+                sum += j;
+                j++;
+            } else if (sum > target) {
+                sum -= i;
+                i++;
+            } else {
+                int[] arr = new int[j - i];
+                for (int k = i; k < j; k++) {
+                    arr[k - i] = k;
+                }
+                res.add(arr);
+                sum -= i;
+                i++;
+            }
+        }
+        return res.toArray(new int[res.size()][]);
+
+    }
+
+    class MaxQueue {
+        private Queue<Integer> dataQueue;
+        private Deque<Integer> maxQueue;
+
+        public MaxQueue() {
+            dataQueue = new LinkedList<>();
+            maxQueue = new LinkedList<>();
+
+        }
+
+        public int max_value() {
+
+            return maxQueue.isEmpty() ? -1 : maxQueue.peek();
+
+        }
+
+        public void push_back(int value) {
+            dataQueue.add(value);
+            if (!maxQueue.isEmpty()) {
+                while (!maxQueue.isEmpty() && value > maxQueue.getLast()) {
+                    maxQueue.pollLast();
+                }
+            }
+            maxQueue.addLast(value);
+
+        }
+
+        public int pop_front() {
+            if (dataQueue.isEmpty()) {
+                return -1;
+            } else {
+
+                int value = dataQueue.poll();
+                if (value == maxQueue.peekFirst()) {
+                    maxQueue.pollFirst();
+
+                }
+                return value;
+            }
+
+        }
+
+    }
+
+    public void merge(int[] A, int m, int[] B, int n) {
+        int[] res = new int[m + n];
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < m && j < n) {
+            res[k++] = A[i] < B[j] ? A[i++] : B[j++];
+        }
+        while (i < m) {
+            res[k++] = A[i++];
+        }
+        while (j < n) {
+            res[k++] = B[j++];
+        }
+        for (int l = 0; l < res.length; l++) {
+            A[l] = res[l];
+        }
+    }
+
+    public int findLengthOfLCIS(int[] nums) {
+        if (nums.length == 0 || nums == null) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return 1;
+        }
+        int n = nums.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        int res = 0;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) {
+                dp[i] = dp[i - 1] + 1;
+            }
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+
+    }
+
+    public int longestCommonSubsequence_1(String text1, String text2) {
+        if (text1 == null || text2 == null) {
+            return 0;
+        }
+        int len1 = text1.length();
+        int len2 = text2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[len1][len2];
+
+    }
+
+    public int longestCommonSubStr(String text1, String text2) {
+        if (text1 == null || text2 == null) {
+            return 0;
+        }
+        int res = 0;
+        int len1 = text1.length();
+        int len2 = text2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }
+                res = Math.max(dp[i][j], res);
+            }
+        }
+        return res;
+
+    }
+
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0 || nums == null) {
+            return 0;
+        }
+        int slow = 0;
+        int fast = 1;
+        while (fast < nums.length) {
+            if (nums[slow] != nums[fast]) {
+                slow++;
+                nums[slow] = nums[fast];
+            }
+            fast++;
+        }
+
+        return slow + 1;
+    }
+
+    public boolean containsDuplicate(int[] nums) {
+        Map<Integer, Integer> map = new HashMap();
+        boolean res = false;
+        for (int i = 0; i < nums.length; i++) {
+            if (!map.containsKey(nums[i])) {
+                map.put(nums[i], 1);
+            } else {
+                res = true;
+                break;
+            }
+        }
+        return res;
+
+    }
+
+    public int findRepeatNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int repeat = -1;
+        for (int num : nums) {
+            if (!set.add(num)) {
+                repeat = num;
+                break;
+            }
+        }
+        return repeat;
+
+    }
+
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!set.add(nums[i])) {
+                return true;
+            }
+            if (set.size() > k) {
+                set.remove(nums[i - k]);
+            }
+        }
+        return false;
+    }
+
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        TreeSet<Integer> set = new TreeSet<>();
+        for (int i = 0; i < nums.length; ++i) {
+            // Find the successor of current element
+            Integer s = set.ceiling(nums[i]);
+            if (s != null && s <= nums[i] + t) return true;
+
+            // Find the predecessor of current element
+            Integer g = set.floor(nums[i]);
+            if (g != null && nums[i] <= g + t) return true;
+
+            set.add(nums[i]);
+            if (set.size() > k) {
+                set.remove(nums[i - k]);
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         ListNode listNode1 = new ListNode(1);
         ListNode listNode2 = new ListNode(2);
@@ -1371,13 +1898,16 @@ public class Solution {
         String s2 = "abc";
         System.out.println(s1 == s2);// 输出 false,因为一个是堆内存，一个是常量池的内存，故两者是不同的。
         System.out.println(s1.equals(s2));// 输出 true
-        for (int i = 2000; i <= 3000; i++) {
-            if (solution.isLeapYear(i)) {
-                System.out.print(i + " ");
+//        for (int i = 2000; i <= 3000; i++) {
+//            if (solution.isLeapYear(i)) {
+//                System.out.print(i + " ");
+//
+//            }
+//
+//        }
 
-            }
-
-        }
+        int[] nums = {0, 3, 1, 4};
+        System.out.println(solution.missingNumber(nums));
 
     }
 

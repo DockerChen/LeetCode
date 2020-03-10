@@ -1,28 +1,26 @@
-import com.sun.xml.internal.ws.server.ServerRtException;
-
 import java.util.*;
 import java.util.LinkedList;
 
 public class PrintBinaryTree_32 {
-    public static class BinaryTree {
+    public static class Tree {
         int value;
-        BinaryTree left;
-        BinaryTree right;
+        Tree left;
+        Tree right;
 
-        BinaryTree(int value) {
+        Tree(int value) {
             this.value = value;
         }
     }
 
-    public static void printBinaryTree(BinaryTree root) {
+    public static void printBinaryTree(Tree root) {
         if (root == null) {
             return;
         }
 
-        Queue<BinaryTree> queue = new LinkedList<>();
+        Queue<Tree> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
-            BinaryTree binaryTree = queue.poll();
+            Tree binaryTree = queue.poll();
 
             if (binaryTree.left != null) {
                 queue.add(binaryTree.left);
@@ -41,20 +39,20 @@ public class PrintBinaryTree_32 {
 
     }
 
-    public static void printBinaryTree_2(BinaryTree root) {
+    public static void printBinaryTree_2(Tree root) {
         if (root == null) {
             return;
         }
 
-        Queue<BinaryTree> queue = new LinkedList<>();
+        Queue<Tree> queue = new LinkedList<>();
         int index = 0;
-        Map<BinaryTree, Integer> map = new HashMap();
+        Map<Tree, Integer> map = new HashMap();
         map.put(root, index);
         queue.add(root);
 
         int pre = index;
         while (!queue.isEmpty()) {
-            BinaryTree binaryTree = queue.poll();
+            Tree binaryTree = queue.poll();
             index = map.get(binaryTree);
             index++;
             if (binaryTree.left != null) {
@@ -82,15 +80,15 @@ public class PrintBinaryTree_32 {
         }
     }
 
-    public static void printBinaryTree_3(BinaryTree root) {
+    public static void printBinaryTree_3(Tree root) {
         if (root == null) {
             return;
         }
 
-        Stack<BinaryTree> stack1 = new Stack<>();
-        Stack<BinaryTree> stack2 = new Stack<>();
+        Stack<Tree> stack1 = new Stack<>();
+        Stack<Tree> stack2 = new Stack<>();
         //记录节点对应的层数
-        Map<BinaryTree, Integer> map = new LinkedHashMap<>();
+        Map<Tree, Integer> map = new LinkedHashMap<>();
         int index = 0;
         //根节点
         map.put(root, index);
@@ -104,7 +102,7 @@ public class PrintBinaryTree_32 {
             if (flag) {
                 while (!stack1.isEmpty()) {
 
-                    BinaryTree node = stack1.pop();
+                    Tree node = stack1.pop();
                     index = map.get(node);
                     if (pre != index) {
                         System.out.println();
@@ -124,7 +122,7 @@ public class PrintBinaryTree_32 {
                 }
             } else {
                 while (!stack2.isEmpty()) {
-                    BinaryTree node = stack2.pop();
+                    Tree node = stack2.pop();
                     index = map.get(node);
                     if (pre != index) {
                         System.out.println();
@@ -149,13 +147,13 @@ public class PrintBinaryTree_32 {
     }
 
     public static void main(String[] args) {
-        BinaryTree root = new BinaryTree(8);
-        BinaryTree left1 = new BinaryTree(6);
-        BinaryTree right1 = new BinaryTree(10);
-        BinaryTree left21 = new BinaryTree(5);
-        BinaryTree right21 = new BinaryTree(7);
-        BinaryTree left22 = new BinaryTree(9);
-        BinaryTree right22 = new BinaryTree(11);
+        Tree root = new Tree(8);
+        Tree left1 = new Tree(6);
+        Tree right1 = new Tree(10);
+        Tree left21 = new Tree(5);
+        Tree right21 = new Tree(7);
+        Tree left22 = new Tree(9);
+        Tree right22 = new Tree(11);
 
         root.left = left1;
         root.right = right1;
