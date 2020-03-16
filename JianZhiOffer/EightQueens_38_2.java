@@ -4,7 +4,6 @@ public class EightQueens_38_2 {
 
     public static void process(int[] ColumnIndex, int index) {
         if (index == ColumnIndex.length - 1) {
-
             for (int i = 0; i < ColumnIndex.length; i++) {
                 for (int j = 0; j < ColumnIndex.length; j++) {
                     //判断两个棋子是否在哎同一对角线上
@@ -16,7 +15,7 @@ public class EightQueens_38_2 {
             count++;
             return;
         }
-
+        //求8个棋子行号的全排列
         for (int i = index; i < ColumnIndex.length; i++) {
             swap(ColumnIndex, index, i);
             process(ColumnIndex, index + 1);

@@ -1,7 +1,13 @@
-import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+
+/*
+ * TODO:
+ *  1. leetcode题解
+ *  2. 每天刷一刷leetcode
+ *  3. 努力是为了站在万人中央成为别人的光
+ * */
 
 // Definition for singly-linked list.
 class ListNode {
@@ -1864,51 +1870,719 @@ public class Solution {
         return false;
     }
 
+    int tree_ans = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        Depth(root);
+        return tree_ans;
+
+    }
+
+    public int Depth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = Depth(root.left);
+        int rightHeight = Depth(root.right);
+        tree_ans = Math.max(tree_ans, leftHeight + rightHeight);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        if (head == null) {
+            return true;
+        }
+        if (root == null) {
+            return false;
+        }
+        //先判断当前节点，如果不对，再看左子树，否则，看右子树
+        return isSub(head, root) || isSubPath(head, root.left) || isSubPath(head, root.right);
+
+    }
+
+    private boolean isSub(ListNode head, TreeNode root) {
+        if (head == null) {
+            return true;
+        }
+        if (root == null) {
+            return false;
+        }
+        if (head.val != root.val) {
+            return false;
+        }
+        if (head.val == root.val) {
+            head = head.next;
+        }
+        //如果值相同，继续看，左边和右边有一个满足即可
+        return isSub(head, root.left) || isSub(head, root.right);
+
+    }
+
+    public boolean checkSubTree(TreeNode t1, TreeNode t2) {
+        if (t1 == null) {
+            return t2 == null;
+        }
+        //先判断当前节点，如果不对，再判断t1的左子树，否则，再判断t1的右子树
+        return isSame(t1, t2) || checkSubTree(t1.left, t2) | checkSubTree(t1.right, t2);
+
+    }
+
+    private boolean isSame(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) {
+            return true;
+        }
+        if (t1 == null || t2 == null) {
+            return false;
+        }
+        //判断t1和t2的值是否相等，t1的左子树和t2的左子树是否相等，t1的右子树和t2的右子树是否相等
+        return t1.val == t2.val && isSame(t1.left, t2.left) && isSame(t1.right, t2.right);
+    }
+
+    int tree_max = 0;
+
+    public int longestZigZag(TreeNode root) {
+        //搜索左孩子
+        dfs(root.left, 0, 1);
+        //搜索右孩子
+        dfs(root.right, 1, 1);
+        return tree_max;
+
+    }
+
+    public void dfs(TreeNode root, int dir, int dis) {
+        if (root == null) {
+            return;
+        }
+        tree_max = Math.max(tree_max, dis);
+        //访问的是右孩子
+        if (dir == 1) {
+            //访问左孩子，dis+1
+            dfs(root.left, 0, dis + 1);
+            //访问右孩子，dis变为1，从该节点开始遍历
+            dfs(root.right, 1, 1);
+        } else {
+            //访问的是左孩子
+            //访问右孩子，dis+1
+            dfs(root.right, 1, dis + 1);
+            //访问左孩子，dis变为1，从该节点开始遍历
+            dfs(root.left, 0, 1);
+        }
+
+    }
+
+    public String gcdOfStrings(String str1, String str2) {
+        //==,判断两个对象的地址是否相等，即判断两个对象是不是同一个对象，
+        //基本数据类型比较的是值，引用数据类型比较的是内存地址
+        //equals，String的equals方法是被重写的，比较的是对象的值
+        if (!(str1 + str2).equals(str2 + str1)) {
+            return "";
+        } else {
+            int maxLen = gcd(str1.length(), str2.length());
+            return str1.substring(0, maxLen);
+        }
+    }
+
+    //GCD 算法 (Greatest Common Divisor) 即欧几里得算法 也就是学生时代 课本里学过的辗转相除法
+    public int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    class MyStack {
+        Queue<Integer> queue1;
+        Queue<Integer> queue2;
+
+        /**
+         * Initialize your data structure here.
+         */
+        public MyStack() {
+            queue1 = new LinkedList<>();
+            queue2 = new LinkedList<>();
+
+        }
+
+        /**
+         * Push element x onto stack.
+         */
+        public void push(int x) {
+            queue1.add(x);
+        }
+
+        /**
+         * Removes the element on top of the stack and returns that element.
+         */
+        public int pop() {
+            while (queue1.size() != 1) {
+                queue2.add(queue1.poll());
+            }
+            int num = queue1.poll();
+            Queue<Integer> queue = new LinkedList<>();
+            queue = queue1;
+            queue1 = queue2;
+            queue2 = queue;
+            return num;
+        }
+
+        /**
+         * Get the top element.
+         */
+        public int top() {
+            int num = 0;
+            while (!queue1.isEmpty()) {
+                num = queue1.poll();
+                queue2.add(num);
+            }
+
+            Queue<Integer> queue = new LinkedList<>();
+            queue = queue1;
+            queue1 = queue2;
+            queue2 = queue;
+            return num;
+
+        }
+
+        /**
+         * Returns whether the stack is empty.
+         */
+        public boolean empty() {
+            return queue1.isEmpty();
+
+        }
+    }
+
+    class MyQueue {
+        Stack<Integer> stack1;
+        Stack<Integer> stack2;
+
+        /**
+         * Initialize your data structure here.
+         */
+        public MyQueue() {
+            stack1 = new Stack<>();
+            stack2 = new Stack<>();
+
+        }
+
+        /**
+         * Push element x to the back of queue.
+         */
+        public void push(int x) {
+            stack1.push(x);
+        }
+
+        /**
+         * Removes the element from in front of queue and returns that element.
+         */
+        public int pop() {
+
+            while (stack1.size() != 1) {
+                stack2.push(stack1.pop());
+            }
+            int num = stack1.pop();
+            while (!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+            return num;
+
+        }
+
+        /**
+         * Get the front element.
+         */
+        public int peek() {
+            int num = 0;
+            while (!stack1.isEmpty()) {
+                num = stack1.pop();
+                stack2.push(num);
+            }
+
+            while (!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+            return num;
+
+        }
+
+        /**
+         * Returns whether the queue is empty.
+         */
+        public boolean empty() {
+            return stack1.isEmpty();
+
+        }
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        int len = lists.length;
+        ListNode res = lists[0];
+        for (int i = 0; i < len - 1; i++) {
+            res = mergeList(res, lists[i + 1]);
+        }
+        return res;
+
+    }
+
+    private ListNode mergeList(ListNode list1, ListNode list2) {
+        ListNode listNode = new ListNode(-1);
+        ListNode head = listNode;
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                head.next = list1;
+                head = list1;
+                list1 = list1.next;
+            } else {
+                head.next = list2;
+                head = list2;
+                list2 = list2.next;
+            }
+        }
+        while (list1 != null) {
+            head.next = list1;
+            head = list1;
+            list1 = list1.next;
+        }
+        while (list2 != null) {
+            head.next = list2;
+            head = list2;
+            list2 = list2.next;
+        }
+        return listNode.next;
+
+    }
+
+    public ListNode mergeKLists_1(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        PriorityQueue<ListNode> priorityQueue = new PriorityQueue<>(new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                if (o1.val < o2.val) {
+                    return -1;
+                } else if (o1.val == o2.val) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        ListNode dummy = new ListNode(-1);
+        ListNode head = dummy;
+        for (ListNode listNode : lists) {
+            if (listNode != null) {
+                priorityQueue.add(listNode);
+            }
+        }
+        while (!priorityQueue.isEmpty()) {
+            head.next = priorityQueue.poll();
+            head = head.next;
+            if (head.next != null) {
+                priorityQueue.add(head.next);
+            }
+        }
+        return dummy.next;
+
+    }
+
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[left] <= nums[mid]) {
+                if (nums[left] <= target && target < nums[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                if (nums[mid] < target && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        return -1;
+
+    }
+
+    public boolean search_1(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return false;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                return true;
+            }
+            if (nums[left] < nums[mid]) {
+                if (nums[left] <= target && target < nums[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else if (nums[left] == nums[mid]) {
+                if (nums[mid] < target && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            } else {
+                //去掉干扰项
+                left++;
+            }
+        }
+        return false;
+    }
+
+    public int findMin(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            if (nums[left] <= nums[right]) {
+                return nums[left];
+            }
+            int mid = left + (right - left) / 2;
+            if (nums[left] <= nums[mid]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return -1;
+
+    }
+
+    public int findMin_1(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            if (nums[left] < nums[right]) {
+                return nums[left];
+            }
+            int mid = left + (right - left) / 2;
+            if (nums[left] < nums[mid]) {
+                left = mid + 1;
+            } else if (nums[left] > nums[mid]) {
+                right = mid;
+            } else {
+                int min = nums[left];
+                for (int i = left; i <= right; i++) {
+                    min = Math.min(min, nums[i]);
+                }
+                return min;
+            }
+
+        }
+        return -1;
+
+    }
+
+    public List<Integer> spiralOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return new ArrayList<>();
+        }
+        int sRow = 0;
+        int dRow = matrix.length - 1;
+        int sColumn = 0;
+        int dColumn = matrix[0].length - 1;
+
+        return printMatrix(matrix, sRow, dRow, sColumn, dColumn);
+
+    }
+
+    public List<Integer> printMatrix(int[][] matrix, int sRow, int dRow, int sColumn, int dColumn) {
+        List<Integer> res = new ArrayList<>();
+        while (sRow <= dRow && sColumn <= dColumn) {
+            //单行
+            if (sRow == dRow) {
+                for (int i = sColumn; i <= dColumn; i++) {
+                    res.add(matrix[sRow][i]);
+                }
+            }
+            //单列
+            else if (sColumn == dColumn) {
+                for (int i = sRow; i <= dRow; i++) {
+                    res.add(matrix[i][sColumn]);
+                }
+            } else {
+                for (int i = sColumn; i <= dColumn; i++) {
+                    res.add(matrix[sRow][i]);
+                }
+                for (int i = sRow + 1; i <= dRow; i++) {
+                    res.add(matrix[i][dColumn]);
+                }
+                for (int i = dColumn - 1; i >= sColumn; i--) {
+                    res.add(matrix[dRow][i]);
+                }
+                for (int i = dRow - 1; i >= sRow + 1; i--) {
+                    res.add(matrix[i][sColumn]);
+                }
+            }
+            sRow++;
+            sColumn++;
+            dRow--;
+            dColumn--;
+
+        }
+        return res;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (root == p || root == q) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left == null) {
+            return right;
+        }
+        if (right == null) {
+            return left;
+        }
+        if (left != null && right != null) {
+            return root;
+        }
+        return null;
+
+    }
+
+    public int uniquePaths(int m, int n) {
+        int[][] arr = new int[n][m];
+        arr[0][0] = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int sum = 0;
+                if (i - 1 >= 0) {
+                    sum += arr[i - 1][j];
+                }
+                if (j - 1 >= 0) {
+                    sum += arr[i][j - 1];
+                }
+                arr[i][j] = Math.max(sum, arr[i][j]);
+            }
+        }
+
+        return arr[n - 1][m - 1];
+
+    }
+
+    public int maxAreaOfIsland(int[][] grid) {
+
+        int maxArea = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    maxArea = Math.max(maxArea, DFS(grid, i, j));
+                }
+            }
+
+        }
+        return maxArea;
+
+    }
+
+    private int DFS(int[][] grid, int i, int j) {
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+            return 0;
+        }
+        if (grid[i][j] != 1) {
+            return 0;
+        }
+        grid[i][j] = 2;
+
+        return 1 + DFS(grid, i - 1, j) + DFS(grid, i + 1, j)
+                + DFS(grid, i, j - 1) + DFS(grid, i, j + 1);
+
+    }
+
+    public boolean canThreePartsEqualSum(int[] A) {
+        int sum = 0;
+        for (int i = 0; i < A.length; i++) {
+            sum += A[i];
+        }
+        if (sum % 3 != 0) {
+            return false;
+        }
+        int left = 0;
+        int right = A.length - 1;
+        int leftSum = A[left];
+        int rightSum = A[right];
+        while (left + 1 < right) {
+            if (leftSum == sum / 3 && rightSum == sum / 3) {
+                return true;
+            }
+            if (leftSum != sum / 3) {
+                leftSum += A[++left];
+            }
+            if (rightSum != sum / 3) {
+                rightSum += A[--right];
+
+            }
+        }
+        return false;
+
+    }
+
+    public String compressString(String S) {
+        if (S == "" || S.length() == 0 || S == null) {
+            return S;
+        }
+        String res = "";
+        int len = S.length();
+        int i = 0;
+        while (i < len) {
+            int j = i;
+            while (j < len && S.charAt(j) == S.charAt(i)) {
+                j++;
+            }
+            res += S.charAt(i);
+            res += j - i;
+            i = j;
+        }
+        return res.length() >= S.length() ? S : res;
+
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        ArrayList<Integer> res = inOrder(root, new ArrayList<Integer>());
+        return res.get(k - 1);
+
+    }
+
+    public ArrayList<Integer> inOrder(TreeNode root, ArrayList<Integer> res) {
+        if (root == null) {
+            return res;
+        }
+        inOrder(root.left, res);
+        res.add(root.val);
+        inOrder(root.right, res);
+        return res;
+
+    }
+
+    List<Integer> orderList = new ArrayList<>();
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        if (root == null) {
+            return orderList;
+        }
+        inorderTraversal(root.left);
+        orderList.add(root.val);
+        inorderTraversal(root.right);
+        return orderList;
+    }
+
+    public int findSecondMinimumValue(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) return -1;//没有最小节点
+
+        //找出候选数，默认就是子节点值，如果子节点值和root值相同，递归，在子树中寻找候选数
+        int left = root.left.val;
+        int right = root.right.val;
+        if (left == root.val)
+            left = findSecondMinimumValue(root.left);
+        if (right == root.val)
+            right = findSecondMinimumValue(root.right);
+
+        //如果左右候选数都正常，返回较小值就可
+        if (left != -1 && right != -1) {
+            return Math.min(left, right);
+        }
+        //如果候选数有-1，说明整个子树中没有可供候选的数
+        if (left != -1) {
+            //左子树正常，答案就是左边的候选数
+            return left;
+        } else {
+            //右子树正常，返回答案
+            //或者右子树也没有候选数，返回-1，即right
+            return right;
+        }
+    }
+
+    int minRes = Integer.MAX_VALUE;
+    TreeNode pre;
+
+    public int minDiffInBST(TreeNode root) {
+        if (root == null) {
+            return minRes;
+        }
+
+        minDiffInBST(root.left);
+        if (pre != null) {
+            minRes = Math.min(minRes, root.val - pre.val);
+        }
+        pre = root;
+        minDiffInBST(root.right);
+        return minRes;
+
+    }
+
+    public boolean exist(char[][] board, String word) {
+        boolean res;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    res = DFSStr(board, i, j, word, 0);
+                    if (res) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+
+    private boolean DFSStr(char[][] board, int i, int j, String word, int index) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index)) {
+            return false;
+        }
+        if (index == word.length() - 1) {
+            return true;
+        }
+        char tmp = board[i][j];
+        board[i][j] = '/';
+        boolean res = DFSStr(board, i - 1, j, word, index + 1) || DFSStr(board, i + 1, j, word, index + 1)
+                || DFSStr(board, i, j - 1, word, index + 1) || DFSStr(board, i, j + 1, word, index + 1);
+        board[i][j] = tmp;
+        return res;
+
+    }
+
     public static void main(String[] args) {
-        ListNode listNode1 = new ListNode(1);
-        ListNode listNode2 = new ListNode(2);
-        ListNode listNode3 = new ListNode(3);
-        listNode1.next = listNode2;
-        listNode2.next = listNode3;
-        listNode3.next = listNode2;
-
-        Solution solution = new Solution();
-//        System.out.println(solution.hasCycle(listNode1));
-//        System.out.println(solution.lengthOfLongestSubstring("pwwkew"));
-//        System.out.println(solution.longestPalindrome("babad"));
-//        System.out.println(solution.longestPalindrome("cbbd"));
-        System.out.println(solution.longestPalindromeSubseq("bbbab"));
+        String str1 = "ABC";
+        String str2 = "ABCABC";
+        System.out.println(str1 + str2);
+        System.out.println(str2 + str1);
+        System.out.println((str1 + str2) == (str2 + str1));
+        System.out.println((str1 + str2).equals(str2 + str1));
         System.out.println(Integer.MAX_VALUE);
-        System.out.println(Integer.MIN_VALUE);
-        System.out.println(-12 % 10);
-
-        System.out.println(solution.permute(new int[]{1, 2, 3}));
-        System.out.println(solution.minWindow("aa", "aa"));
-        String s = "atbc";
-        String t = "tcba";
-        System.out.println(solution.isAnagram_1(s, t));
-        String[] strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        System.out.println(solution.groupAnagrams(strs));
-        int[] arr = {3, 5, 2, -2, 4, 1};
-        System.out.println(solution.subarraySum(arr, 8));
-        System.out.println(solution.findContinuousSequence(9));
-        System.out.println(solution.multiply("123", "45"));
-
-        String s1 = new String("abc");// 堆内存的地址值
-        String s2 = "abc";
-        System.out.println(s1 == s2);// 输出 false,因为一个是堆内存，一个是常量池的内存，故两者是不同的。
-        System.out.println(s1.equals(s2));// 输出 true
-//        for (int i = 2000; i <= 3000; i++) {
-//            if (solution.isLeapYear(i)) {
-//                System.out.print(i + " ");
-//
-//            }
-//
-//        }
-
-        int[] nums = {0, 3, 1, 4};
-        System.out.println(solution.missingNumber(nums));
+        Solution solution = new Solution();
+        int[] arr = {3, 1, 3};
+        System.out.println(solution.findMin_1(arr));
+        System.out.println(solution.uniquePaths(3, 2));
 
     }
 
 }
+
