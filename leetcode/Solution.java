@@ -2546,18 +2546,122 @@ public class Solution {
 
     }
 
+    public int find(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (target == arr[mid]) {
+                return mid;
+            } else if (target < arr[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 0) {
+            return 0;
+        }
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+        //至少有一个区间不相交
+        int res = 1;
+        int end = intervals[0][1];
+        for (int i = 0; i < intervals.length; i++) {
+            int start = intervals[i][0];
+            if (start >= end) {
+                end = intervals[i][1];
+                res++;
+            }
+        }
+        return intervals.length - res;
+
+    }
+
+    public boolean makesquare(int[] nums) {
+        int len = nums.length;
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        if (len < 4 || sum % 4 != 0) {
+            return false;
+        }
+        int sideLength = sum / 4;
+        int[] data = new int[4];
+        Arrays.sort(nums);
+        reverse(nums);
+        return helper(nums, data, 0, len, sideLength);
+
+    }
+
+    public boolean helper(int[] nums, int[] data, int index, int len, int sideLength) {
+        if (index == len) {
+            for (int i = 0; i < data.length; i++) {
+                if (data[i] != sideLength) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        for (int i = 0; i < data.length; i++) {
+
+            if (data[i] + nums[index] > sideLength) {
+                continue;
+            }
+            data[i] += nums[index];
+            if (helper(nums, data, index + 1, len, sideLength)) {
+
+                return true;
+            }
+            data[i] -= nums[index];
+
+        }
+
+        return false;
+
+    }
+
+    private void reverse(int[] nums) {
+        int l = 0, r = nums.length - 1, t;
+        while (l < r) {
+            t = nums[r];
+            nums[r--] = nums[l];
+            nums[l++] = t;
+        }
+    }
+
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        return makesquare(nums, k);
+
+    }
+
+    public boolean makesquare(int[] nums, int k) {
+        int len = nums.length;
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        if (len < k || sum % k != 0) {
+            return false;
+        }
+        int sideLength = sum / k;
+        int[] data = new int[k];
+        int[] visit = new int[len];
+        return helper(nums, data, 0, len, sideLength);
+
+    }
+
     public static void main(String[] args) {
-        String str1 = "ABC";
-        String str2 = "ABCABC";
-        System.out.println(str1 + str2);
-        System.out.println(str2 + str1);
-        System.out.println((str1 + str2) == (str2 + str1));
-        System.out.println((str1 + str2).equals(str2 + str1));
-        System.out.println(Integer.MAX_VALUE);
-        Solution solution = new Solution();
-        int[] arr = {3, 1, 3};
-        System.out.println(solution.findMin_1(arr));
-        System.out.println(solution.uniquePaths(3, 2));
 
     }
 
