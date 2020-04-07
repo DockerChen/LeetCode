@@ -2661,8 +2661,429 @@ public class Solution {
 
     }
 
-    public static void main(String[] args) {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> combinationRes = new ArrayList<>();
+        helpCombination(candidates, 0, 0, target, new ArrayList<Integer>(), combinationRes);
+        return combinationRes;
 
+    }
+
+    public void helpCombination(int[] candidates, int curSum, int index, int target, List<Integer> res, List<List<Integer>> combinationRes) {
+        if (curSum == target) {
+//            System.out.println(curSum + " " + target);
+//            System.out.println(res);
+
+            combinationRes.add(new ArrayList<>(res));
+
+            return;
+        }
+
+        if (curSum > target) {
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+
+            res.add(candidates[i]);
+            //下一轮，从当前位置开始遍历，防止出现重复的组合
+            helpCombination(candidates, curSum + candidates[i], i, target, res, combinationRes);
+            res.remove(res.size() - 1);
+        }
+
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> combinationRes = new ArrayList<>();
+        helpCombination2(candidates, 0, 0, target, new ArrayList<Integer>(), combinationRes);
+        return combinationRes;
+
+    }
+
+    public void helpCombination2(int[] candidates, int curSum, int index, int target, List<Integer> res, List<List<Integer>> combinationRes) {
+        if (curSum == target) {
+//            System.out.println(curSum + " " + target);
+//            System.out.println(res);
+
+            combinationRes.add(new ArrayList<>(res));
+
+            return;
+        }
+
+        if (curSum > target) {
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            //剪枝，跳过每一层中重复的数字
+            if (i > index && candidates[i - 1] == candidates[i]) {
+                continue;
+            }
+
+            res.add(candidates[i]);
+            helpCombination2(candidates, curSum + candidates[i], i + 1, target, res, combinationRes);
+            res.remove(res.size() - 1);
+        }
+
+    }
+
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+        int target = sum / 2;
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = target; j >= nums[i]; j--) {
+                dp[j] = dp[j] || dp[j - nums[i]];
+            }
+
+        }
+
+        return dp[target];
+
+    }
+
+    public int findTargetSumWays(int[] nums, int S) {
+        return helper(nums, 0, S);
+
+    }
+
+    public int helper(int[] nums, int start, int S) {
+        if (start == nums.length) {
+            return S == 0 ? 1 : 0;
+        }
+        return helper(nums, start + 1, S - nums[start])
+                + helper(nums, start + 1, S + nums[start]);
+
+    }
+
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        Arrays.sort(nums);
+        for (int i = 1; i <= target; i++) {
+            for (int j = 0; j < nums.length && nums[j] <= i; j++) {
+                dp[i] += dp[i - nums[j]];
+            }
+
+        }
+        return dp[target];
+
+    }
+
+    class Point {
+        int x;
+        int y;
+
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    //BFS
+    public int maxDistance(int[][] grid) {
+        Queue<int[]> queue = new LinkedList<>();
+        boolean hasLand = false;
+        boolean hasOcean = false;
+        //将所有的陆地坐标入队
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    queue.add(new int[]{i, j});
+                    hasLand = true;
+                } else {
+                    hasOcean = true;
+                }
+            }
+        }
+
+        if (!hasLand || !hasOcean) {
+            return -1;
+        }
+
+        int[] dx = {0, 0, 1, -1};
+        int[] dy = {1, -1, 0, 0};
+        int[] point = null;
+        while (!queue.isEmpty()) {
+            point = queue.poll();
+            int newX;
+            int newY;
+
+            for (int i = 0; i < dx.length; i++) {
+                newX = point[0] + dx[i];
+                newY = point[1] + dy[i];
+                if (newX < 0 || newX >= grid.length || newY < 0 || newY >= grid[0].length || grid[newX][newY] != 0) {
+                    continue;
+                }
+                grid[newX][newY] = grid[point[0]][point[1]] + 1;
+                queue.add(new int[]{newX, newY});
+            }
+        }
+        return grid[point[0]][point[1]] - 1;
+
+    }
+
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> res = new ArrayList<>();
+
+        if (n == 1) {
+            res.add(0);
+            return res;
+        }
+        if (edges.length == 0 || edges[0].length < 2) {
+            return res;
+        }
+
+        //邻接表
+        List<List<Integer>> adjacencyList = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+        //存储每个点的度数
+        int[] degree = new int[n];
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < edges.length; i++) {
+            int start = edges[i][0];
+            int end = edges[i][1];
+            adjacencyList.get(start).add(end);
+            adjacencyList.get(end).add(start);
+            degree[start]++;
+            degree[end]++;
+        }
+        //添加度数为1的点
+        for (int i = 0; i < n; i++) {
+            if (degree[i] == 1) {
+                queue.add(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            res.clear();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int curNode = queue.poll();
+                res.add(curNode);
+                for (int j = 0; j < adjacencyList.get(curNode).size(); j++) {
+                    int node = adjacencyList.get(curNode).get(j);
+                    degree[node]--;
+                    if (degree[node] == 1) {
+                        queue.add(node);
+                    }
+                }
+            }
+
+        }
+        return res;
+
+    }
+
+    public int longestPalindrome_4(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int maxLen = 0;
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+//        System.out.println(map);
+        Set<Character> set = map.keySet();
+        Iterator iterator = set.iterator();
+        int maxOdd = 0;
+        while (iterator.hasNext()) {
+            int tmp = map.get(iterator.next());
+            maxLen += tmp / 2 * 2;
+            if (tmp % 2 == 1 && maxLen % 2 == 0) {
+                maxLen++;
+            }
+        }
+        return maxLen;
+
+    }
+
+    public int minimumLengthEncoding(String[] words) {
+        Set<String> set = new HashSet<>(Arrays.asList(words));
+        for (String word : words) {
+            for (int i = 1; i < word.length(); i++) {
+                set.remove(word.substring(i));
+            }
+        }
+        int ans = 0;
+        for (String word : set) {
+            ans += word.length() + 1;
+        }
+        return ans;
+
+    }
+
+    class TrieNode {
+        TrieNode[] children;
+
+        public TrieNode() {
+            children = new TrieNode[26];
+        }
+    }
+
+    class Trie {
+        TrieNode root;
+
+        public Trie() {
+            root = new TrieNode();
+        }
+
+        public int insert(String word) {
+            if (word == null) {
+                return 0;
+            }
+            char[] chs = word.toCharArray();
+            TrieNode node = root;
+            int index = 0;
+            boolean isNew = false;
+            for (int i = chs.length - 1; i >= 0; i--) {
+                index = chs[i] - 'a';
+                if (node.children[index] == null) {
+                    node.children[index] = new TrieNode();
+                    isNew = true;
+                }
+                node = node.children[index];
+            }
+//            System.out.println(word + " " + isNew);
+            return isNew ? word.length() + 1 : 0;
+        }
+    }
+
+    public int minimumLengthEncoding_1(String[] words) {
+        int ans = 0;
+        Trie trie = new Trie();
+        Arrays.sort(words, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o2.length() - o1.length();
+            }
+        });
+        for (int i = 0; i < words.length; i++) {
+            ans += trie.insert(words[i]);
+        }
+        return ans;
+
+    }
+
+    int resC = 0;
+
+    public int numRookCaptures(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 'R') {
+                    helper(board, i, j);
+                }
+            }
+        }
+        return resC;
+
+    }
+
+    public void helper(char[][] board, int x, int y) {
+        int tmpX = x;
+        int tmpY = y;
+        while (--tmpX >= 0) {
+            if (board[tmpX][y] == 'B') {
+                break;
+            }
+            if (board[tmpX][y] == 'p') {
+                resC++;
+                break;
+            }
+            if (board[tmpX][y] == '.') {
+                continue;
+            }
+        }
+        tmpX = x;
+        while (++tmpX < board.length) {
+            if (board[tmpX][y] == 'B') {
+                break;
+            }
+            if (board[tmpX][y] == 'p') {
+                resC++;
+                break;
+            }
+            if (board[tmpX][y] == '.') {
+                continue;
+            }
+        }
+
+        while (--tmpY >= 0) {
+            if (board[x][tmpY] == 'B') {
+                break;
+            }
+            if (board[x][tmpY] == 'p') {
+                resC++;
+                break;
+            }
+            if (board[x][tmpY] == '.') {
+                continue;
+            }
+        }
+        tmpY = y;
+        while (++tmpY < board[0].length) {
+            if (board[x][tmpY] == 'B') {
+                break;
+            }
+            if (board[x][tmpY] == 'p') {
+                resC++;
+                break;
+            }
+            if (board[x][tmpY] == '.') {
+                continue;
+            }
+        }
+
+    }
+
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    public int surfaceArea(int[][] grid) {
+        int ans = 0;
+        //立方体个数
+        int cubes = 0;
+        //重合面个数
+        int faces = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                cubes += grid[i][j];
+                if (grid[i][j] > 0) {
+                    faces += grid[i][j] - 1;
+                }
+                if (i > 0) {
+                    faces += Math.min(grid[i - 1][j], grid[i][j]);
+                }
+                if (j > 0) {
+                    faces += Math.min(grid[i][j - 1], grid[i][j]);
+                }
+            }
+        }
+
+        ans = 6 * cubes - 2 * faces;
+        return ans;
+
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        String[] words = {"time", "me", "bell"};
+        System.out.println(solution.minimumLengthEncoding_1(words));
     }
 
 }

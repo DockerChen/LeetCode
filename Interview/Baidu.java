@@ -4,11 +4,11 @@ public class Baidu {
     int res = 0;
 
     public static void main(String[] args) {
-        Baidu baidu = new Baidu();
+        Baidu main = new Baidu();
 //        main.s1();
-//        main.s2();
+        main.s2();
 //        main.s3();
-        System.out.println(baidu.gcd_1(6, 4));
+//        System.out.println(baidu.gcd_1(6, 4));
 
     }
 
