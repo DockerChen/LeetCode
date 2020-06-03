@@ -1,5 +1,5 @@
-import java.util.*;
 import java.util.LinkedList;
+import java.util.*;
 
 public class Solution1 {
     public int[] getLeastNumbers(int[] arr, int k) {
@@ -232,11 +232,218 @@ public class Solution1 {
 
     }
 
+    public void sortColors(int[] nums) {
+        int zero = -1;
+        int one = 0;
+        int two = nums.length;
+        while (one < two) {
+            if (nums[one] == 0) {
+                swap(nums, ++zero, one++);
+            } else if (nums[one] == 2) {
+                swap(nums, one, --two);
+            } else {
+                one++;
+            }
+        }
+
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return cmp(root.left, root.right);
+    }
+
+    private boolean cmp(TreeNode left, TreeNode right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null || left.val != right.val) {
+            return false;
+        }
+        return cmp(left.left, right.right) && cmp(left.right, right.left);
+    }
+
+    public boolean isSymmetricByRecursive(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root.left);
+        queue.add(root.right);
+        while (!queue.isEmpty()) {
+            TreeNode left = queue.poll();
+            TreeNode right = queue.poll();
+            if (left == null && right == null) {
+                continue;
+            }
+            if (left == null || right == null || left.val != right.val) {
+                return false;
+            }
+            queue.add(left.left);
+            queue.add(right.right);
+            queue.add(left.right);
+            queue.add(right.left);
+        }
+        return true;
+
+    }
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null || p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+
+    }
+
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return getHeight(root) != -1;
+    }
+
+    private int getHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = getHeight(root.left);
+        if (left == -1) {
+            return -1;
+        }
+        int right = getHeight(root.right);
+        if (right == -1) {
+            return -1;
+        }
+        return Math.abs(left - right) < 2 ? Math.max(left, right) + 1 : -1;
+
+    }
+
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        TreeNode node = left;
+        left = right;
+        right = node;
+        invertTree(left);
+        invertTree(right);
+        return root;
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0) {
+            return null;
+        }
+        TreeNode root = new TreeNode(nums[nums.length / 2]);
+        root.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, nums.length / 2));
+        root.right = sortedArrayToBST(Arrays.copyOfRange(nums, nums.length / 2 + 1, nums.length));
+        return root;
+    }
+
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        return Math.max(left, right) + 1;
+
+    }
+
+    long pre = Long.MIN_VALUE;
+
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        if (!isValidBST(root.left)) {
+            return false;
+        }
+        if (root.val <= pre) {
+            return false;
+        }
+        pre = root.val;
+        return isValidBST(root.right);
+
+    }
+
+    public int numIslands(char[][] grid) {
+        int ans = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == '1') {
+                    dfs(grid, i, j);
+                    ++ans;
+                }
+
+            }
+        }
+        return ans;
+
+    }
+
+    public void dfs(char[][] grid, int i, int j) {
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] != '1') {
+            return;
+        }
+        grid[i][j] = '2';
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    }
+
+    public void solve(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                boolean isEdge = i == 0 || i == board.length - 1 || j == 0 || j == board[0].length - 1;
+                if (isEdge && board[i][j] == 'O') {
+                    dfs1(board, i, j);
+                }
+            }
+        }
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+                if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+
+    }
+
+    public void dfs1(char[][] board, int i, int j) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != 'O') {
+            return;
+        }
+        board[i][j] = '#';
+        dfs1(board, i + 1, j);
+        dfs1(board, i - 1, j);
+        dfs1(board, i, j + 1);
+        dfs1(board, i, j - 1);
+
+    }
 
     public static void main(String[] args) {
         Solution1 solution1 = new Solution1();
-//        System.out.println(solution1.lastRemaining(5, 3));
-        System.out.println(solution1.movingCount(20, 20, 6));
 
     }
 
