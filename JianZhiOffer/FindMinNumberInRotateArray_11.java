@@ -1,4 +1,3 @@
-import org.jetbrains.annotations.NotNull;
 
 public class FindMinNumberInRotateArray_11 {
     public static int findByDichotomy(int[] arr) {
@@ -64,7 +63,6 @@ public class FindMinNumberInRotateArray_11 {
 
     }
 
-    @NotNull
     public static String comparator(int[] arr) {
         return findByDichotomy(arr) == findByForce(arr) ? "true" : "false";
     }
